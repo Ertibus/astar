@@ -2,9 +2,8 @@ pub mod pathfinding;
 pub mod style;
 
 pub mod consts {
-    pub const MAX_BOARD_WIDTH: usize = 8;
-    pub const MAX_BOARD_LENGTH: usize = 8;
-    pub const GRID_BUTTON_SPACING: u16 = 12;
+    pub const MAX_BOARD_HEIGHT: usize = 20;
+    pub const MAX_BOARD_WIDTH: usize = 20;
 }
 
 #[derive(Debug, PartialEq, Eq, Clone)]
@@ -27,6 +26,8 @@ impl Default for Cell {
 #[derive(Default)]
 pub struct GameData {
     pub board: Vec<Vec<Cell>>,
+    pub board_size_x: i32,
+    pub board_size_y: i32,
     pub point_a: Option<Cell>,
     pub point_b: Option<Cell>,
 }

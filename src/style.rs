@@ -10,15 +10,10 @@ pub const SOLID: Color = Color::from_rgb(
     0x02 as f32 / 255.0,
     0x0b as f32 / 255.0,
 );
-pub const POINT_A: Color = Color::from_rgb(
+pub const POINT: Color = Color::from_rgb(
     0x44 as f32 / 255.0,
     0xa1 as f32 / 255.0,
     0xa0 as f32 / 255.0,
-);
-pub const POINT_B: Color = Color::from_rgb(
-    0xe6 as f32 / 255.0,
-    0xaa as f32 / 255.0,
-    0x68 as f32 / 255.0,
 );
 pub const OPEN: Color = Color::from_rgb(
     0x7f as f32 / 255.0,
@@ -53,7 +48,7 @@ impl button::StyleSheet for Button {
             Button::Open => (Some(OPEN), Color::WHITE),
             Button::Closed => (Some(CLOSED), Color::WHITE),
             Button::Path => (Some(PATH), Color::WHITE),
-            Button::Point => (Some(POINT_A), Color::WHITE),
+            Button::Point => (Some(POINT), Color::WHITE),
         };
         button::Style {
             text_color,

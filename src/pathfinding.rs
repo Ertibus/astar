@@ -1,6 +1,6 @@
-use crate::{ GameData, Cell, consts };
+use crate::{ GameData, Cell };
 
-#[derive(PartialEq, Eq, Clone)]
+#[derive(Debug, PartialEq, Eq, Clone)]
 struct PathNode<'a> {
     cell: &'a Cell,
     g_cost: i32,
@@ -16,30 +16,20 @@ const DIST_BETWEEN: i32 = 10;
 fn heuristic(a: &Cell, b: &Cell) -> i32 {
     let diff_x: i32 = (a.x as i32 - b.x as i32).abs();
     let diff_y: i32 = (a.y as i32 - b.y as i32).abs();
-    diff_x.min(diff_y) + (diff_x - diff_y).abs()
+    //diff_x.min(diff_y) * DIST_BETWEEN + (diff_x - diff_y).abs() * (DIST_BETWEEN as f32 * DIST_BETWEEN as f32).sqrt() as i32 // Diagonal movement
+    diff_x + diff_y
 }
 
-pub fn find_path(game: &GameData) -> Option<Vec<Cell>> {
-    let point_a = match &game.point_a {
-        Some(val) => val,
-        None => panic!("No Point A set"),
-        
-    };
-    let point_b = match &game.point_b {
-        Some(val) => val,
-        None => panic!("No Point B set"),
-        
-    };
-
+pub fn find_path(game: &GameData, start_cell: &Cell, end_cell: &Cell) -> Option<Vec<Cell>> {
     let start_node: PathNode = PathNode {
-        cell: point_a,
+        cell: start_cell,
         g_cost: 0,
         h_cost: 0,
         f_cost: 0,
         came_from: Box::new(None),
     };
     let end_node: PathNode = PathNode {
-        cell: point_b,
+        cell: end_cell,
         g_cost: 0,
         h_cost: 0,
         f_cost: 0,
@@ -77,30 +67,29 @@ pub fn find_path(game: &GameData) -> Option<Vec<Cell>> {
             let y = current.cell.y as i32 + DIRECTIONAL_ARRAY_Y[i];
 
             if x < 0
-               || x >= consts::MAX_BOARD_WIDTH as i32
+               || x >= game.board_size_x
                || y < 0
-               || y >= consts::MAX_BOARD_LENGTH as i32
-               || i == 4 // Skip self
-               || closed_set.iter().any(|node| node.cell == &game.board[x as usize][y as usize])
-               || game.board[x as usize][y as usize].solid
+               || y >= game.board_size_y
+               || closed_set.iter().any(|node| node.cell == &game.board[y as usize][x as usize])
+               || game.board[y as usize][x as usize].solid
                {
                 continue;
             }
 
-            let tentative_g_score = if x == 0 || y == 0 {
+            let tentative_g_score = if DIRECTIONAL_ARRAY_X[i] == 0 || DIRECTIONAL_ARRAY_Y[i] == 0 {
                 current.g_cost + DIST_BETWEEN // Orthogonal movement
             } else {
-                current.g_cost + (DIST_BETWEEN as f32 * 2.0).sqrt() as i32 // Diagonal movement
+                current.g_cost + (DIST_BETWEEN as f32 * DIST_BETWEEN as f32 * 2.0).sqrt() as i32 // Diagonal movement
             };
 
-            if let Some(neighbor) = open_set.iter().find(|&node| node.cell == &game.board[x as usize][y as usize]) {
+            if let Some(neighbor) = open_set.iter().find(|&node| node.cell == &game.board[y as usize][x as usize]) {
                 if neighbor.g_cost <= tentative_g_score {
                     continue;
                 }
             } else {
-                let h_score = heuristic(&game.board[x as usize][y as usize], &end_node.cell);
+                let h_score = heuristic(&game.board[y as usize][x as usize], &end_node.cell);
                 let neighbor: PathNode = PathNode {
-                    cell: &game.board[x as usize][y as usize],
+                    cell: &game.board[y as usize][x as usize],
                     g_cost: tentative_g_score,
                     h_cost: h_score,
                     f_cost: tentative_g_score + h_score,
