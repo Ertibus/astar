@@ -161,8 +161,7 @@ impl Sandbox for AStarUI {
     fn view(&mut self) -> iced::Element<'_, Self::Message> {
         let point_a = &self.game.point_a;
         let point_b = &self.game.point_b;
-        let button_size = (WINDOW_SIZE_Y as f32 / self.game.board_size_y as f32).min(WINDOW_SIZE_X as f32 / self.game.board_size_y as f32) as u16;
-
+        let button_size = (WINDOW_SIZE_Y as f32 / self.game.board_size_y as f32) as u16;
         let board = self.board
             .iter_mut()
             .enumerate()
@@ -208,6 +207,8 @@ impl Sandbox for AStarUI {
                                 .on_press(Message::PlacePoint(x, y))
                                 .height(Length::Units(button_size))
                                 .width(Length::Units(button_size))
+                                .min_width(button_size.into())
+                                .min_height(button_size.into())
                                 .style(button_style)
                             )
                         })
