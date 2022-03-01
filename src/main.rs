@@ -202,13 +202,13 @@ impl Sandbox for AStarUI {
 
                             clm.push(
                                 Button::new(btn,
-                                            Text::new("")
+                                            Text::new(" ")
                                 )
                                 .on_press(Message::PlacePoint(x, y))
                                 .height(Length::Units(button_size))
                                 .width(Length::Units(button_size))
-                                .min_width(button_size.into())
-                                .min_height(button_size.into())
+                                .min_width(32)
+                                .min_height(32)
                                 .style(button_style)
                             )
                         })
