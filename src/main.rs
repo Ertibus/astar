@@ -237,7 +237,7 @@ impl Sandbox for AStarUI {
                         .max_width(300)
                         .spacing(16)
                     )
-                    .push(board)
+                    .push(board.max_width(900))
                     .width(Length::Fill)
                     .height(Length::Fill)
                     .align_items(iced::Align::Center)
